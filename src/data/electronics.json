@@ -1,0 +1,14 @@
+[
+  {
+    "title": "iPhone 15",
+    "description": "Latest Apple flagship",
+    "price": 999,
+    "images": ["https://via.placeholder.com/200x150?text=iPhone15"]
+  },
+  {
+    "title": "Samsung Galaxy S24",
+    "description": "Powerful Android device",
+    "price": 899,
+    "images": ["https://via.placeholder.com/200x150?text=Galaxy+S24"]
+  }
+]

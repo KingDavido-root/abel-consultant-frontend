@@ -1,17 +1,17 @@
-import { Link } from 'react-router-dom';
-
 export default function Home() {
   return (
-    <div className="max-w-4xl mx-auto mt-10 text-center">
-      <h1 className="text-4xl font-bold mb-4">Welcome to Abel Consultant LLC</h1>
-      <p className="text-gray-600 mb-8">
-        We import and export Electronics, Vehicles and Spare Parts. Browse our catalog and place your order today!
+    <div className="flex flex-col items-center justify-center text-center mt-12 px-4">
+      <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
+        Welcome to Abel Consultant LLC
+      </h1>
+      <p className="text-gray-600 max-w-xl mb-6">
+        Your trusted partner in importing quality Electronics, Vehicles & Spare Parts.
       </p>
-      <div className="space-x-4">
-        <Link to="/electronics" className="bg-blue-600 text-white px-4 py-2 rounded">Electronics</Link>
-        <Link to="/cars" className="bg-blue-600 text-white px-4 py-2 rounded">Vehicles</Link>
-        <Link to="/spareparts" className="bg-blue-600 text-white px-4 py-2 rounded">Spare Parts</Link>
-      </div>
+      <img 
+        src="https://source.unsplash.com/featured/?technology,car,sparepart"
+        alt="Hero"
+        className="rounded-lg shadow-lg w-full max-w-4xl h-64 object-cover"
+      />
     </div>
   );
 }

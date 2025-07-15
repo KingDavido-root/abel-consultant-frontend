@@ -9,7 +9,7 @@ export default function ProductCard({ product, type }) {
 
   const handleOrder = async () => {
     if (!user) {
-      setMessage('Please login to place an order');
+      setMessage('⚠️ Please login to place an order');
       return;
     }
     setLoading(true);
@@ -31,23 +31,29 @@ export default function ProductCard({ product, type }) {
   };
 
   return (
-    <div className="bg-white shadow-md rounded p-4 flex flex-col items-center">
+    <div className="bg-white rounded-xl shadow hover:shadow-lg transition-transform hover:-translate-y-1 overflow-hidden flex flex-col">
       <img
-        src={product.images[0]}
+        src={product.images?.[0]}
         alt={product.title}
-        className="w-32 h-32 object-cover mb-2"
+        className="h-48 w-full object-cover"
       />
-      <h3 className="font-semibold">{product.title}</h3>
-      <p className="text-gray-600 text-sm">{product.description}</p>
-      <p className="text-blue-600 font-bold mb-2">${product.price}</p>
-      <button
-        onClick={handleOrder}
-        disabled={loading}
-        className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded mb-2"
-      >
-        {loading ? 'Placing...' : 'Place Order'}
-      </button>
-      {message && <p className="text-xs text-center">{message}</p>}
+      <div className="p-4 flex flex-col flex-1">
+        <h3 className="text-lg font-semibold mb-1">{product.title}</h3>
+        <p className="text-gray-600 text-sm flex-1">{product.description}</p>
+        <p className="font-bold text-blue-600 mt-2">${product.price}</p>
+
+        <button
+          onClick={handleOrder}
+          disabled={loading}
+          className="bg-green-600 text-white py-2 rounded mt-2 hover:bg-green-700 transition disabled:opacity-50"
+        >
+          {loading ? 'Placing...' : 'Place Order'}
+        </button>
+
+        {message && (
+          <p className="text-xs mt-1 text-center">{message}</p>
+        )}
+      </div>
     </div>
   );
 }

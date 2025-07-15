@@ -1,62 +1,25 @@
-import { useEffect, useState, useContext } from 'react';
-import api from '../utils/api';
-import { AuthContext } from '../context/AuthContext';
+import { useState, useEffect } from 'react';
+import dummyCars from '../data/dummyCars';
+import ProductCard from '../components/ProductCard';
 
 export default function Cars() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { token } = useContext(AuthContext);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await api.get('/products/cars');
-        setProducts(res.data);
-      } catch (err) {
-        console.error(err);
-        alert('Failed to load products');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
+    setProducts(dummyCars);
+    setLoading(false);
   }, []);
 
-  const handleOrder = async (productId) => {
-    try {
-      await api.post('/orders',
-        { productType: 'car', productId },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      alert('Order placed!');
-    } catch (err) {
-      console.error(err);
-      alert('Failed to place order');
-    }
-  };
-
   return (
-    <div className="max-w-4xl mx-auto mt-8">
-      <h1 className="text-2xl font-bold mb-4">Vehicles</h1>
+    <div className="p-4">
+      <h2 className="text-xl font-semibold mb-4">Vehicles</h2>
       {loading ? (
-        <div className="flex justify-center items-center h-40">
-          <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500"></div>
-        </div>
+        <p className="text-center">⌛ Loading...</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {products.map(car => (
-            <div key={car._id} className="border p-4 rounded shadow flex flex-col">
-              <img src={car.images?.[0]} alt={car.title} className="w-full h-40 object-cover mb-2" />
-              <h2 className="font-semibold">{car.title}</h2>
-              <p className="text-gray-500 flex-1">{car.description}</p>
-              <p className="font-bold mb-2">${car.price}</p>
-              <button
-                onClick={() => handleOrder(car._id)}
-                className="bg-green-600 text-white py-1 rounded mt-auto"
-              >
-                Place Order
-              </button>
-            </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {products.map(product => (
+            <ProductCard key={product._id} product={product} type="car" />
           ))}
         </div>
       )}

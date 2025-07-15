@@ -12,34 +12,37 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-gray-900 text-white px-4 py-3 flex justify-between items-center shadow-md">
+    <nav className="bg-gray-900 text-white px-4 py-3 flex justify-between items-center shadow-md sticky top-0 z-50">
       <div className="flex items-center space-x-4">
-        <Link to="/" className="text-xl font-bold text-blue-400 hover:text-blue-500">
+        <Link 
+          to="/" 
+          className="text-xl font-bold text-blue-400 hover:text-blue-500 transition-colors"
+        >
           Abel Consultant LLC
         </Link>
-        <Link to="/electronics" className="hover:text-blue-300">Electronics</Link>
-        <Link to="/cars" className="hover:text-blue-300">Vehicles</Link>
-        <Link to="/spareparts" className="hover:text-blue-300">Spare Parts</Link>
-        <Link to="/orders" className="hover:text-blue-300">My Orders</Link>
+        <Link to="/electronics" className="hover:text-blue-300 transition-colors">Electronics</Link>
+        <Link to="/cars" className="hover:text-blue-300 transition-colors">Vehicles</Link>
+        <Link to="/spareparts" className="hover:text-blue-300 transition-colors">Spare Parts</Link>
+        <Link to="/orders" className="hover:text-blue-300 transition-colors">My Orders</Link>
         {user?.role === 'admin' && (
-          <Link to="/admin" className="hover:text-yellow-400">Admin</Link>
+          <Link to="/admin" className="hover:text-yellow-400 transition-colors">Admin</Link>
         )}
       </div>
       <div className="flex items-center space-x-4">
         {user ? (
           <>
-            <span className="italic">{user.name}</span>
+            <span className="italic text-sm md:text-base">{user.name}</span>
             <button
               onClick={handleLogout}
-              className="bg-red-500 px-3 py-1 rounded hover:bg-red-600"
+              className="bg-red-500 hover:bg-red-600 transition-colors px-3 py-1 rounded"
             >
               Logout
             </button>
           </>
         ) : (
           <>
-            <Link to="/login" className="hover:text-blue-300">Login</Link>
-            <Link to="/register" className="hover:text-blue-300">Register</Link>
+            <Link to="/login" className="hover:text-blue-300 transition-colors">Login</Link>
+            <Link to="/register" className="hover:text-blue-300 transition-colors">Register</Link>
           </>
         )}
       </div>
