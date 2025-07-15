@@ -1,61 +1,36 @@
-import { useEffect, useState, useContext } from 'react';
-import api from '../utils/api';
-import { AuthContext } from '../context/AuthContext';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import ProductCard from '../components/ProductCard';
 
 export default function Electronics() {
-    const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    const { token } = useContext(AuthContext);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const res = await api.get('/products/electronics');
-                setProducts(res.data);
-            } catch (err) {
-                console.error(err);
-                alert('Failed to load products');
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchData();
-    }, []);
-
-
-    const handleOrder = async (productId) => {
-        try {
-            await api.post('/orders',
-                { productType: 'electronic', productId },
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-            alert('Order placed!');
-        } catch (err) {
-            console.error(err);
-            alert('Failed to place order');
-        }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get('/api/products/electronics');
+        setProducts(res.data);
+      } catch (err) {
+        console.error(err);
+      }
+      setLoading(false);
     };
+    fetchData();
+  }, []);
 
-    return (
-        <div className="max-w-4xl mx-auto mt-8">
-            <h1 className="text-2xl font-bold mb-4">Electronics</h1>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {products.map(item => (
-                    <div key={item._id} className="border p-4 rounded shadow flex flex-col">
-                        <img src={item.images?.[0]} alt={item.title} className="w-full h-40 object-cover mb-2" />
-                        <h2 className="font-semibold">{item.title}</h2>
-                        <p className="text-gray-500 flex-1">{item.description}</p>
-                        <p className="font-bold mb-2">${item.price}</p>
-                        <button
-                            onClick={() => handleOrder(item._id)}
-                            className="bg-green-600 text-white py-1 rounded mt-auto"
-                        >
-                            Place Order
-                        </button>
-                    </div>
-                ))}
-            </div>
+  return (
+    <div className="p-4">
+      <h2 className="text-xl font-semibold mb-4">Electronics</h2>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {products.map(product => (
+            <ProductCard key={product._id} product={product} type="electronic" />
+          ))}
         </div>
-    );
+      )}
+    </div>
+  );
 }

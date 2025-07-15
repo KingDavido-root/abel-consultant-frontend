@@ -8,7 +8,6 @@ import Electronics from './pages/Electronics';
 import Orders from './pages/Orders';
 import PrivateRoute from './components/PrivateRoute';
 
-
 function App() {
   return (
     <AuthProvider>
@@ -20,7 +19,14 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/electronics" element={<Electronics />} />
-            <Route path="/orders" element={<Orders />} />
+            <Route
+              path="/orders"
+              element={
+                <PrivateRoute>
+                  <Orders />
+                </PrivateRoute>
+              }
+            />
           </Routes>
         </div>
       </Router>

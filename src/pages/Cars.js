@@ -5,28 +5,26 @@ import { AuthContext } from '../context/AuthContext';
 export default function Cars() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const { token } = useContext(AuthContext);
 
- useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const res = await api.get('/products/cars');
-      setProducts(res.data);
-    } catch (err) {
-      console.error(err);
-      alert('Failed to load products');
-    } finally {
-      setLoading(false);
-    }
-  };
-  fetchData();
-}, []);
-
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await api.get('/products/cars');
+        setProducts(res.data);
+      } catch (err) {
+        console.error(err);
+        alert('Failed to load products');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleOrder = async (productId) => {
     try {
-      await api.post('/orders', 
+      await api.post('/orders',
         { productType: 'car', productId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -40,22 +38,28 @@ export default function Cars() {
   return (
     <div className="max-w-4xl mx-auto mt-8">
       <h1 className="text-2xl font-bold mb-4">Vehicles</h1>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {cars.map(car => (
-          <div key={car._id} className="border p-4 rounded shadow flex flex-col">
-            <img src={car.images?.[0]} alt={car.title} className="w-full h-40 object-cover mb-2" />
-            <h2 className="font-semibold">{car.title}</h2>
-            <p className="text-gray-500 flex-1">{car.description}</p>
-            <p className="font-bold mb-2">${car.price}</p>
-            <button
-              onClick={() => handleOrder(car._id)}
-              className="bg-green-600 text-white py-1 rounded mt-auto"
-            >
-              Place Order
-            </button>
-          </div>
-        ))}
-      </div>
+      {loading ? (
+        <div className="flex justify-center items-center h-40">
+          <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500"></div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {products.map(car => (
+            <div key={car._id} className="border p-4 rounded shadow flex flex-col">
+              <img src={car.images?.[0]} alt={car.title} className="w-full h-40 object-cover mb-2" />
+              <h2 className="font-semibold">{car.title}</h2>
+              <p className="text-gray-500 flex-1">{car.description}</p>
+              <p className="font-bold mb-2">${car.price}</p>
+              <button
+                onClick={() => handleOrder(car._id)}
+                className="bg-green-600 text-white py-1 rounded mt-auto"
+              >
+                Place Order
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
