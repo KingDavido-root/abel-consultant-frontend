@@ -1,10 +1,10 @@
 {
   "env": {
-    "REACT_APP_API_URL": "https://your-backend-url.onrender.com/api"
+    "REACT_APP_API_URL": "https://abel-consultant-backend.onrender.com/api"
   },
   "build": {
     "env": {
-      "REACT_APP_API_URL": "https://your-backend-url.onrender.com/api"
+      "REACT_APP_API_URL": "https://abel-consultant-backend.onrender.com/api"
     }
   }
 }
