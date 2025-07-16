@@ -1,9 +1,15 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
+import { FaShoppingCart, FaHeart } from 'react-icons/fa';
 import { AuthContext } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
+import { useProduct } from '../context/ProductContext';
 
 export default function Navbar() {
   const { user, logout } = useContext(AuthContext);
+  const { getCartSummary } = useCart();
+  const { wishlist } = useProduct();
+  const cartSummary = getCartSummary();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -29,6 +35,34 @@ export default function Navbar() {
         )}
       </div>
       <div className="flex items-center space-x-4">
+        {user && (
+          <>
+            <Link
+              to="/cart"
+              className="hover:text-blue-300 transition-colors flex items-center"
+            >
+              <FaShoppingCart className="mr-1" />
+              <span className="hidden md:inline">Cart</span>
+              {cartSummary.itemCount > 0 && (
+                <span className="ml-1 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
+                  {cartSummary.itemCount}
+                </span>
+              )}
+            </Link>
+            <Link
+              to="/wishlist"
+              className="hover:text-blue-300 transition-colors flex items-center"
+            >
+              <FaHeart className="mr-1" />
+              <span className="hidden md:inline">Wishlist</span>
+              {wishlist.length > 0 && (
+                <span className="ml-1 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                  {wishlist.length}
+                </span>
+              )}
+            </Link>
+          </>
+        )}
         {user ? (
           <>
             <span className="italic text-sm md:text-base">{user.name}</span>

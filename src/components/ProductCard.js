@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useContext, useState } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { FaStar, FaHeart, FaShoppingCart, FaInfoCircle } from 'react-icons/fa';
+import { FaStar, FaHeart, FaShoppingCart, FaInfoCircle, FaCommentDots, FaQuestionCircle } from 'react-icons/fa';
 import { useImageLoader } from '../utils/imageOptimization';
 
 export default function ProductCard({ product, type, onAddToWishlist, onQuickView }) {
@@ -10,8 +10,9 @@ export default function ProductCard({ product, type, onAddToWishlist, onQuickVie
   const [message, setMessage] = useState('');
   const [selectedVariant, setSelectedVariant] = useState(product.variants?.[0]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  
-  // Use optimized image loading
+import ProductReviewSection from './ProductReviewSection';
+import ProductQnASection from './ProductQnASection';
+import PriceTracker from './PriceTracker';
   const { imageSrc, loading: imageLoading } = useImageLoader(product.images?.[currentImageIndex]);
 
   const handleOrder = async () => {
@@ -159,7 +160,21 @@ export default function ProductCard({ product, type, onAddToWishlist, onQuickVie
                 ))}
             </ul>
           </div>
-        )}
+
+        {/* Price Tracker */}
+        <PriceTracker product={product} />
+
+        {/* Customer Reviews */}
+        <ProductReviewSection 
+          reviews={product.reviews} 
+          onAddReview={(review) => console.log('Add review:', review)}
+        />
+
+        {/* Customer Q&A */}
+        <ProductQnASection 
+          questions={product.questions} 
+          onAddQuestion={(question) => console.log('Add question:', question)}
+        />
 
         {message && (
           <p className="text-xs mt-2 text-center">{message}</p>
