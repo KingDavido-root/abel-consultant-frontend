@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_URL, getAuthHeaders } from '../../config/api';
-import { FiEdit2, FiTrash2, FiPlusCircle } from 'react-icons/fi';
+import { FiEdit2, FiTrash2, FiPlusCircle, FiDatabase } from 'react-icons/fi';
+import { addSampleProducts } from '../../utils/sampleData';
 import { toast } from 'react-toastify';
 
 const ProductsManagement = () => {
@@ -96,16 +97,36 @@ const ProductsManagement = () => {
       <div className="p-6">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold">Products Management</h2>
-          <button
-            onClick={() => {
-              setEditingProduct(null);
-              setFormData({ title: '', description: '', price: '', category: 'Electronics' });
-              setShowModal(true);
-            }}
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center">
-            <FiPlusCircle className="mr-2" />
-            Add Product
-          </button>
+          <div className="flex space-x-4">
+            <button
+              onClick={async () => {
+                if (window.confirm('Are you sure you want to add sample products? This will add multiple products to each category.')) {
+                  setLoading(true);
+                  const success = await addSampleProducts(axios, API_URL, getAuthHeaders);
+                  if (success) {
+                    toast.success('Sample products added successfully');
+                    fetchProducts();
+                  } else {
+                    toast.error('Failed to add sample products');
+                  }
+                  setLoading(false);
+                }
+              }}
+              className="bg-green-500 text-white px-4 py-2 rounded-lg flex items-center">
+              <FiDatabase className="mr-2" />
+              Add Sample Data
+            </button>
+            <button
+              onClick={() => {
+                setEditingProduct(null);
+                setFormData({ title: '', description: '', price: '', category: 'Electronics' });
+                setShowModal(true);
+              }}
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center">
+              <FiPlusCircle className="mr-2" />
+              Add Product
+            </button>
+          </div>
         </div>
 
         <div className="overflow-x-auto">

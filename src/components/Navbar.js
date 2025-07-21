@@ -65,7 +65,12 @@ export default function Navbar() {
         )}
         {user ? (
           <>
-            <span className="italic text-sm md:text-base">{user.name}</span>
+            <Link
+              to="/account"
+              className="hover:text-blue-300 transition-colors flex items-center"
+            >
+              <span className="italic text-sm md:text-base">{user.name}</span>
+            </Link>
             <button
               onClick={handleLogout}
               className="bg-red-500 hover:bg-red-600 transition-colors px-3 py-1 rounded"
