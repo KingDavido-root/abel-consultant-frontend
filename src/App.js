@@ -14,7 +14,7 @@ import Electronics from './pages/Electronics';
 import Orders from './pages/Orders';
 import Cart from './pages/Cart';
 import OrderTracking from './pages/OrderTracking';
-import AdminDashboard from './pages/AdminDashboard';
+import AdminPanel from './pages/AdminPanel';
 
 import PrivateRoute from './components/PrivateRoute';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -65,7 +65,7 @@ function App() {
                     path="/admin"
                     element={
                       <ProtectedRoute roles={['admin']}>
-                        <AdminDashboard />
+                        <AdminPanel />
                       </ProtectedRoute>
                     }
                   />
