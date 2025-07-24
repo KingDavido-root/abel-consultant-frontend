@@ -26,9 +26,13 @@ export default function Navbar() {
         >
           Abel Consultant LLC
         </Link>
+        <Link to="/electronics" className="hover:text-blue-300 transition-colors">Electronics</Link>
+        <Link to="/vehicles" className="hover:text-blue-300 transition-colors">Vehicles</Link>
+        <Link to="/spare-parts" className="hover:text-blue-300 transition-colors">Spare Parts</Link>
         <Link to="/orders" className="hover:text-blue-300 transition-colors">My Orders</Link>
         {user?.role === 'admin' && (
           <>
+            <div className="h-4 w-px bg-gray-600 mx-2"></div>
             <Link to="/admin" className="hover:text-yellow-400 transition-colors">Admin</Link>
             <Link to="/inventory" className="hover:text-yellow-400 transition-colors">Inventory</Link>
           </>
