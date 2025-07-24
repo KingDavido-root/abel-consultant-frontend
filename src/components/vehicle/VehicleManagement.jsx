@@ -28,7 +28,7 @@ const VehicleManagement = () => {
 
   const fetchVehicles = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/vehicles`, getAuthHeaders());
+      const response = await axios.get(`${API_URL}/vehicles`, getAuthHeaders());
       setVehicles(response.data);
       setLoading(false);
     } catch (error) {
@@ -50,14 +50,14 @@ const VehicleManagement = () => {
     try {
       if (selectedVehicle) {
         await axios.put(
-          `${API_URL}/api/vehicles/${selectedVehicle._id}`,
+          `${API_URL}/vehicles/${selectedVehicle._id}`,
           formData,
           getAuthHeaders()
         );
         toast.success('Vehicle updated successfully');
       } else {
         await axios.post(
-          `${API_URL}/api/vehicles`,
+          `${API_URL}/vehicles`,
           formData,
           getAuthHeaders()
         );
@@ -102,7 +102,7 @@ const VehicleManagement = () => {
     if (!window.confirm('Are you sure you want to remove this vehicle?')) return;
 
     try {
-      await axios.delete(`${API_URL}/api/vehicles/${vehicleId}`, getAuthHeaders());
+      await axios.delete(`${API_URL}/vehicles/${vehicleId}`, getAuthHeaders());
       toast.success('Vehicle removed successfully');
       fetchVehicles();
     } catch (error) {
