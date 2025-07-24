@@ -50,7 +50,7 @@ const AccountManagement = () => {
 
   const fetchAddresses = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/users/addresses`, {
+      const response = await axios.get(`${API_URL}/users/addresses`,
         headers: { Authorization: `Bearer ${user.token}` }
       });
       setAddresses(response.data);
@@ -61,7 +61,7 @@ const AccountManagement = () => {
 
   const fetchPaymentMethods = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/users/payment-methods`, {
+      const response = await axios.get(`${API_URL}/users/payment-methods`,
         headers: { Authorization: `Bearer ${user.token}` }
       });
       setPaymentMethods(response.data);
@@ -72,7 +72,7 @@ const AccountManagement = () => {
 
   const fetchAppointments = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/appointments`, {
+      const response = await axios.get(`${API_URL}/appointments`,
         headers: { Authorization: `Bearer ${user.token}` }
       });
       setServiceAppointments(response.data);
@@ -83,7 +83,7 @@ const AccountManagement = () => {
 
   const fetchNotifications = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/notifications`, {
+      const response = await axios.get(`${API_URL}/notifications`,
         headers: { Authorization: `Bearer ${user.token}` }
       });
       setNotifications(response.data);
@@ -94,7 +94,7 @@ const AccountManagement = () => {
 
   const fetchWishlist = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/wishlist`, {
+      const response = await axios.get(`${API_URL}/wishlist`,
         headers: { Authorization: `Bearer ${user.token}` }
       });
       setWishlist(response.data);
@@ -105,7 +105,7 @@ const AccountManagement = () => {
 
   const fetchOrders = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/orders/my`, {
+      const response = await axios.get(`${API_URL}/orders/my`,
         headers: { Authorization: `Bearer ${user.token}` }
       });
       setOrders(response.data);
@@ -137,7 +137,7 @@ const AccountManagement = () => {
         data.newPassword = profile.newPassword;
       }
 
-      const response = await axios.put(`${API_URL}/api/users/profile`, data, {
+      const response = await axios.put(`${API_URL}/users/profile`,
         headers: { Authorization: `Bearer ${user.token}` }
       });
 
