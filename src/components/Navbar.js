@@ -26,13 +26,12 @@ export default function Navbar() {
         >
           Abel Consultant LLC
         </Link>
-        <Link to="/electronics" className="hover:text-blue-300 transition-colors">Electronics</Link>
-        <Link to="/cars" className="hover:text-blue-300 transition-colors">Vehicles</Link>
-        <Link to="/spareparts" className="hover:text-blue-300 transition-colors">Spare Parts</Link>
-<Link to="/orders" className="hover:text-blue-300 transition-colors">My Orders</Link>
-        <Link to="/vehicles" className="hover:text-blue-300 transition-colors">My Vehicles</Link>
+        <Link to="/orders" className="hover:text-blue-300 transition-colors">My Orders</Link>
         {user?.role === 'admin' && (
-          <Link to="/admin" className="hover:text-yellow-400 transition-colors">Admin</Link>
+          <>
+            <Link to="/admin" className="hover:text-yellow-400 transition-colors">Admin</Link>
+            <Link to="/inventory" className="hover:text-yellow-400 transition-colors">Inventory</Link>
+          </>
         )}
       </div>
       <div className="flex items-center space-x-4">

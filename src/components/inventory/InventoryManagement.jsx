@@ -1,0 +1,279 @@
+import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
+import { FiPlus, FiEdit2, FiTrash2 } from 'react-icons/fi';
+import axios from 'axios';
+import { API_URL, getAuthHeaders } from '../../config/api';
+
+const InventoryManagement = () => {
+  const [category, setCategory] = useState('vehicles'); // vehicles, electronics, spareParts
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [formData, setFormData] = useState({});
+
+  // Form fields configuration based on category
+  const formFields = {
+    vehicles: [
+      { name: 'make', label: 'Make', type: 'text', required: true },
+      { name: 'model', label: 'Model', type: 'text', required: true },
+      { name: 'year', label: 'Year', type: 'number', required: true, min: 1900, max: new Date().getFullYear() + 1 },
+      { name: 'vin', label: 'VIN', type: 'text', maxLength: 17 },
+      { name: 'licensePlate', label: 'License Plate', type: 'text' },
+      { name: 'color', label: 'Color', type: 'text' },
+      { name: 'mileage', label: 'Current Mileage', type: 'number', min: 0 },
+      { name: 'lastService', label: 'Last Service Date', type: 'date' },
+      { name: 'notes', label: 'Notes', type: 'textarea', rows: 3 }
+    ],
+    electronics: [
+      { name: 'name', label: 'Name', type: 'text', required: true },
+      { name: 'brand', label: 'Brand', type: 'text', required: true },
+      { name: 'model', label: 'Model', type: 'text', required: true },
+      { name: 'serialNumber', label: 'Serial Number', type: 'text' },
+      { name: 'condition', label: 'Condition', type: 'select', options: ['New', 'Like New', 'Good', 'Fair', 'Poor'] },
+      { name: 'price', label: 'Price', type: 'number', min: 0, step: 0.01, required: true },
+      { name: 'stockQuantity', label: 'Stock Quantity', type: 'number', min: 0, required: true },
+      { name: 'description', label: 'Description', type: 'textarea', rows: 3 }
+    ],
+    spareParts: [
+      { name: 'name', label: 'Name', type: 'text', required: true },
+      { name: 'partNumber', label: 'Part Number', type: 'text', required: true },
+      { name: 'manufacturer', label: 'Manufacturer', type: 'text', required: true },
+      { name: 'category', label: 'Category', type: 'text' },
+      { name: 'compatibility', label: 'Compatibility', type: 'text' },
+      { name: 'location', label: 'Storage Location', type: 'text' },
+      { name: 'price', label: 'Price', type: 'number', min: 0, step: 0.01, required: true },
+      { name: 'stockQuantity', label: 'Stock Quantity', type: 'number', min: 0, required: true },
+      { name: 'description', label: 'Description', type: 'textarea', rows: 3 }
+    ]
+  };
+
+  useEffect(() => {
+    fetchItems();
+  }, [category]);
+
+  const fetchItems = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/${category}`, getAuthHeaders());
+      setItems(response.data);
+      setLoading(false);
+    } catch (error) {
+      toast.error(`Failed to fetch ${category}`);
+      setLoading(false);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (selectedItem) {
+        await axios.put(
+          `${API_URL}/api/${category}/${selectedItem._id}`,
+          formData,
+          getAuthHeaders()
+        );
+        toast.success(`${category} item updated successfully`);
+      } else {
+        await axios.post(
+          `${API_URL}/api/${category}`,
+          formData,
+          getAuthHeaders()
+        );
+        toast.success(`${category} item added successfully`);
+      }
+      setShowModal(false);
+      setSelectedItem(null);
+      setFormData({});
+      fetchItems();
+    } catch (error) {
+      toast.error(error.response?.data?.message || `Error saving ${category} item`);
+    }
+  };
+
+  const handleEdit = (item) => {
+    setSelectedItem(item);
+    setFormData(item);
+    setShowModal(true);
+  };
+
+  const handleDelete = async (itemId) => {
+    if (!window.confirm(`Are you sure you want to remove this ${category} item?`)) return;
+
+    try {
+      await axios.delete(`${API_URL}/api/${category}/${itemId}`, getAuthHeaders());
+      toast.success(`${category} item removed successfully`);
+      fetchItems();
+    } catch (error) {
+      toast.error(`Failed to remove ${category} item`);
+    }
+  };
+
+  if (loading) {
+    return (
+      \u003cdiv className="flex items-center justify-center h-64"\u003e
+        \u003cdiv className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"\u003e\u003c/div\u003e
+      \u003c/div\u003e
+    );
+  }
+
+  return (
+    \u003cdiv className="container mx-auto px-4 py-8"\u003e
+      \u003cdiv className="flex flex-col md:flex-row justify-between items-center mb-6 space-y-4 md:space-y-0"\u003e
+        \u003ch1 className="text-2xl font-bold"\u003eInventory Management\u003c/h1\u003e
+        \u003cdiv className="flex items-center space-x-4"\u003e
+          \u003cselect
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          \u003e
+            \u003coption value="vehicles"\u003eVehicles\u003c/option\u003e
+            \u003coption value="electronics"\u003eElectronics\u003c/option\u003e
+            \u003coption value="spareParts"\u003eSpare Parts\u003c/option\u003e
+          \u003c/select\u003e
+          \u003cbutton
+            onClick={() => {
+              setSelectedItem(null);
+              setFormData({});
+              setShowModal(true);
+            }}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center"
+          \u003e
+            \u003cFiPlus className="mr-2" /\u003e
+            Add {category.slice(0, -1)}
+          \u003c/button\u003e
+        \u003c/div\u003e
+      \u003c/div\u003e
+
+      \u003cdiv className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"\u003e
+        {items.map((item) => (
+          \u003cdiv key={item._id} className="bg-white rounded-lg shadow-md p-6"\u003e
+            \u003cdiv className="flex justify-between items-start mb-4"\u003e
+              \u003cdiv\u003e
+                \u003ch3 className="text-xl font-semibold"\u003e
+                  {category === 'vehicles' 
+                    ? `${item.year} ${item.make} ${item.model}`
+                    : item.name}
+                \u003c/h3\u003e
+                \u003cp className="text-gray-600"\u003e
+                  {category === 'vehicles' 
+                    ? item.licensePlate 
+                    : category === 'electronics'
+                    ? `${item.brand} - ${item.model}`
+                    : `Part #: ${item.partNumber}`}
+                \u003c/p\u003e
+              \u003c/div\u003e
+              \u003cdiv className="flex space-x-2"\u003e
+                \u003cbutton
+                  onClick={() => handleEdit(item)}
+                  className="text-blue-600 hover:text-blue-800"
+                \u003e
+                  \u003cFiEdit2 size={20} /\u003e
+                \u003c/button\u003e
+                \u003cbutton
+                  onClick={() => handleDelete(item._id)}
+                  className="text-red-600 hover:text-red-800"
+                \u003e
+                  \u003cFiTrash2 size={20} /\u003e
+                \u003c/button\u003e
+              \u003c/div\u003e
+            \u003c/div\u003e
+
+            \u003cdiv className="space-y-2"\u003e
+              {Object.entries(item)
+                .filter(([key]) => !['_id', '__v', 'createdAt', 'updatedAt'].includes(key))
+                .map(([key, value]) => (
+                  \u003cp key={key}\u003e
+                    \u003cspan className="font-medium"\u003e{key.charAt(0).toUpperCase() + key.slice(1)}:\u003c/span\u003e
+                    {' '}
+                    {key === 'lastService' ? new Date(value).toLocaleDateString() : value}
+                  \u003c/p\u003e
+                ))}
+            \u003c/div\u003e
+          \u003c/div\u003e
+        ))}
+      \u003c/div\u003e
+
+      {/* Add/Edit Modal */}
+      {showModal && (
+        \u003cdiv className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 overflow-y-auto"\u003e
+          \u003cdiv className="bg-white rounded-lg p-8 max-w-2xl w-full my-8"\u003e
+            \u003ch2 className="text-2xl font-bold mb-6"\u003e
+              {selectedItem ? `Edit ${category.slice(0, -1)}` : `Add New ${category.slice(0, -1)}`}
+            \u003c/h2\u003e
+            \u003cform onSubmit={handleSubmit} className="space-y-4"\u003e
+              \u003cdiv className="grid grid-cols-1 md:grid-cols-2 gap-4"\u003e
+                {formFields[category].map((field) => (
+                  \u003cdiv key={field.name} className={field.type === 'textarea' ? 'col-span-2' : ''}\u003e
+                    \u003clabel className="block text-sm font-medium text-gray-700"\u003e{field.label}\u003c/label\u003e
+                    {field.type === 'select' ? (
+                      \u003cselect
+                        name={field.name}
+                        value={formData[field.name] || ''}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        required={field.required}
+                      \u003e
+                        \u003coption value=""\u003eSelect {field.label}\u003c/option\u003e
+                        {field.options.map(option => (
+                          \u003coption key={option} value={option}\u003e{option}\u003c/option\u003e
+                        ))}
+                      \u003c/select\u003e
+                    ) : field.type === 'textarea' ? (
+                      \u003ctextarea
+                        name={field.name}
+                        value={formData[field.name] || ''}
+                        onChange={handleInputChange}
+                        rows={field.rows}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        required={field.required}
+                      /\u003e
+                    ) : (
+                      \u003cinput
+                        type={field.type}
+                        name={field.name}
+                        value={formData[field.name] || ''}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        required={field.required}
+                        min={field.min}
+                        max={field.max}
+                        step={field.step}
+                        maxLength={field.maxLength}
+                      /\u003e
+                    )}
+                  \u003c/div\u003e
+                ))}
+              \u003c/div\u003e
+
+              \u003cdiv className="flex justify-end space-x-3 mt-6"\u003e
+                \u003cbutton
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                \u003e
+                  Cancel
+                \u003c/button\u003e
+                \u003cbutton
+                  type="submit"
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                \u003e
+                  {selectedItem ? `Update ${category.slice(0, -1)}` : `Add ${category.slice(0, -1)}`}
+                \u003c/button\u003e
+              \u003c/div\u003e
+            \u003c/form\u003e
+          \u003c/div\u003e
+        \u003c/div\u003e
+      )}
+    \u003c/div\u003e
+  );
+};
+
+export default InventoryManagement;

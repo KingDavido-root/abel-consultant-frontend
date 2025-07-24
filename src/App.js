@@ -15,7 +15,7 @@ import Orders from './pages/Orders';
 import Cart from './pages/Cart';
 import OrderTracking from './pages/OrderTracking';
 import AdminPanel from './pages/AdminPanel';
-import VehicleManagement from './pages/VehicleManagement';
+import Inventory from './pages/Inventory';
 
 import PrivateRoute from './components/PrivateRoute';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -72,11 +72,11 @@ function App() {
                   />
 
                   <Route
-                    path="/vehicles"
+                    path="/inventory"
                     element={
-                      <PrivateRoute>
-                        <VehicleManagement />
-                      </PrivateRoute>
+                      <ProtectedRoute roles={['admin']}>
+                        <Inventory />
+                      </ProtectedRoute>
                     }
                   />
                 </Routes>

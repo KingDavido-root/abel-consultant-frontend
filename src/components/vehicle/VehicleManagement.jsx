@@ -212,8 +212,8 @@ const VehicleManagement = () => {
 
       {/* Add/Edit Vehicle Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-8 max-w-md w-full">
+<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-lg p-8 max-w-2xl w-full my-8">
             <h2 className="text-2xl font-bold mb-6">
               {selectedVehicle ? 'Edit Vehicle' : 'Add New Vehicle'}
             </h2>
