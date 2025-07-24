@@ -1,6 +1,9 @@
 import { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { API_URL } from '../config/api';
+import { toast } from 'react-toastify';
 
 export default function Login() {
   const { login } = useContext(AuthContext);
@@ -11,10 +14,18 @@ export default function Login() {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      await login(email, password);
+      const response = await axios.post(`${API_URL}/api/auth/login`, {
+        email,
+        password
+      });
+      
+      const { token, user } = response.data;
+      login(token, user);
+      
+      toast.success('Login successful!');
       navigate('/');
-    } catch {
-      alert('Login failed');
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Login failed');
     }
   };
 
