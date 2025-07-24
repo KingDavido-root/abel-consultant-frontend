@@ -26,9 +26,9 @@ export default function AdminDashboard() {
     const fetchData = async () => {
       try {
         const [resProducts, resOrders, resStats] = await Promise.all([
-          api.get('/products/electronics'),
-          api.get('/orders/admin/all', { headers: { Authorization: `Bearer ${token}` } }),
-          api.get('/orders/admin/stats', { headers: { Authorization: `Bearer ${token}` } })
+          api.get('/api/products/electronics'),
+          api.get('/api/orders/admin/all', { headers: { Authorization: `Bearer ${token}` } }),
+          api.get('/api/orders/admin/stats', { headers: { Authorization: `Bearer ${token}` } })
         ]);
         setProducts(resProducts.data);
         setOrders(resOrders.data);
@@ -45,7 +45,7 @@ export default function AdminDashboard() {
 
   const handleAddProduct = async () => {
     try {
-      await api.post('/products/electronics', newProduct, { headers: { Authorization: `Bearer ${token}` } });
+      await api.post('/api/products/electronics', newProduct, { headers: { Authorization: `Bearer ${token}` } });
       alert('Product added!');
       setNewProduct({ title: '', description: '', price: '', images: [''], stock: '' });
     } catch (err) {
@@ -56,7 +56,7 @@ export default function AdminDashboard() {
 
   const handleDeleteProduct = async (id) => {
     try {
-      await api.delete(`/products/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+      await api.delete(`/api/products/${id}`, { headers: { Authorization: `Bearer ${token}` } });
       setProducts(products.filter(p => p._id !== id));
     } catch (err) {
       console.error(err);
@@ -66,7 +66,7 @@ export default function AdminDashboard() {
 
   const handleUpdateOrderStatus = async (id, status) => {
     try {
-      await api.put(`/orders/${id}`, { status }, { headers: { Authorization: `Bearer ${token}` } });
+      await api.put(`/api/orders/${id}`, { status }, { headers: { Authorization: `Bearer ${token}` } });
       setOrders(orders.map(order => order._id === id ? { ...order, status } : order));
     } catch (err) {
       console.error(err);

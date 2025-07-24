@@ -64,7 +64,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const response = await axios.get(`${API_URL}/api/admin/dashboard`, getAuthHeaders());
+        const response = await axios.get(`${API_URL}/admin/dashboard`, getAuthHeaders());
         setStats(response.data);
         setLoading(false);
       } catch (err) {
