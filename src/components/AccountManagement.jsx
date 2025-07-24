@@ -3,6 +3,7 @@ import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { FiUser, FiPackage, FiShoppingBag, FiSettings, FiHeart, FiCreditCard, FiMapPin, FiTruck, FiBell } from 'react-icons/fi';
+import { API_URL } from '../config/api';
 
 const AccountManagement = () => {
   const { user, updateUser } = useContext(AuthContext);
@@ -20,16 +21,91 @@ const AccountManagement = () => {
     confirmPassword: ''
   });
   const [orders, setOrders] = useState([]);
+  const [wishlist, setWishlist] = useState([]);
 
   useEffect(() => {
-    if (activeTab === 'orders') {
-      fetchOrders();
+    switch (activeTab) {
+      case 'orders':
+        fetchOrders();
+        break;
+      case 'addresses':
+        fetchAddresses();
+        break;
+      case 'payments':
+        fetchPaymentMethods();
+        break;
+      case 'appointments':
+        fetchAppointments();
+        break;
+      case 'notifications':
+        fetchNotifications();
+        break;
+      case 'wishlist':
+        fetchWishlist();
+        break;
+      default:
+        break;
     }
   }, [activeTab]);
 
+  const fetchAddresses = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/users/addresses`, {
+        headers: { Authorization: `Bearer ${user.token}` }
+      });
+      setAddresses(response.data);
+    } catch (error) {
+      toast.error('Failed to fetch addresses');
+    }
+  };
+
+  const fetchPaymentMethods = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/users/payment-methods`, {
+        headers: { Authorization: `Bearer ${user.token}` }
+      });
+      setPaymentMethods(response.data);
+    } catch (error) {
+      toast.error('Failed to fetch payment methods');
+    }
+  };
+
+  const fetchAppointments = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/appointments`, {
+        headers: { Authorization: `Bearer ${user.token}` }
+      });
+      setServiceAppointments(response.data);
+    } catch (error) {
+      toast.error('Failed to fetch appointments');
+    }
+  };
+
+  const fetchNotifications = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/notifications`, {
+        headers: { Authorization: `Bearer ${user.token}` }
+      });
+      setNotifications(response.data);
+    } catch (error) {
+      toast.error('Failed to fetch notifications');
+    }
+  };
+
+  const fetchWishlist = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/wishlist`, {
+        headers: { Authorization: `Bearer ${user.token}` }
+      });
+      setWishlist(response.data);
+    } catch (error) {
+      toast.error('Failed to fetch wishlist');
+    }
+  };
+
   const fetchOrders = async () => {
     try {
-      const response = await axios.get('/api/orders/my', {
+      const response = await axios.get(`${API_URL}/api/orders/my`, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       setOrders(response.data);
@@ -61,7 +137,7 @@ const AccountManagement = () => {
         data.newPassword = profile.newPassword;
       }
 
-      const response = await axios.put('/api/users/profile', data, {
+      const response = await axios.put(`${API_URL}/api/users/profile`, data, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
 
@@ -119,7 +195,8 @@ const AccountManagement = () => {
             >
               <FiSettings />
               <span>Admin Panel</span>
-        </button>
+            </button>
+          )}
           <button
             onClick={() => setActiveTab('addresses')}
             className={`w-full flex items-center space-x-2 px-4 py-2 rounded-lg ${
@@ -165,7 +242,6 @@ const AccountManagement = () => {
             <FiHeart />
             <span>Wishlist</span>
           </button>
-          )}
         </div>
 
         {/* Main Content */}
