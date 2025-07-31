@@ -3,15 +3,20 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store/store';
 
-// Components
+// Pages
+import Home from './pages/Home';
+import Electronics from './pages/Electronics';
+import ElectronicsDetails from './pages/ElectronicsDetails';
+
+// Components - Shared
 import PrivateRoute from './components/shared/PrivateRoute';
 import AdminRoute from './components/shared/AdminRoute';
 
-// Cart and Order Components
+// Cart & Order Pages
 import CartView from './components/cart/CartView';
 import OrderHistory from './components/orders/OrderHistory';
 
-// Admin Components
+// Admin Pages
 import Dashboard from './components/admin/dashboard/Dashboard';
 import OrdersManagement from './components/admin/orders/OrdersManagement';
 
@@ -22,7 +27,9 @@ function App() {
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
-          
+          <Route path="/electronics" element={<Electronics />} />
+          <Route path="/electronics/:id" element={<ElectronicsDetails />} />
+
           {/* Protected Routes */}
           <Route
             path="/cart"
